@@ -1,0 +1,40 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
+  html,body{
+    display: grid;
+    height: 100%;
+    width: 100%;
+    place-items: center;
+    background: -webkit-linear-gradient(left, #003366,#004080,#0059b3
+  , #0073e6);
+  }
+  .box{
+    background-color: #fff;
+    border-radius: 25px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    padding: 40px;
+    width: 300px;
+    
+}
+.btn-layer{
+  background-color: #007bff; /* Background color of the button */
+  color: #fff; 
+  border: none; 
+  padding: 5px 15px; 
+  border-radius: 3px; 
+  cursor: pointer; 
+  font-size: 16px; 
+ 
+}
+/* Define a CSS class for styling titles */
+.tittle-stu {
+  font-size: 24px;
+  font-weight: bold; 
+  color: #333; 
+ text-align: center; 
+  margin-top: 20px; 
+}
