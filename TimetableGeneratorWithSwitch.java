@@ -83,26 +83,36 @@ public class TimetableGeneratorWithSwitch {
                         subjects.add(new Subject(subjectName, subjectCredits));
                     }
 
-                    classTimings.add("9:00 AM - 10:00 AM");
-                    classTimings.add("10:15 AM - 11:15 AM");
+                    classTimings.add("9:30 AM - 10:30 AM");
+                    classTimings.add("10:30 AM - 11:30 AM");
                     classTimings.add("11:30 AM - 12:30 PM");
-                    classTimings.add("01:30 AM - 02:30 PM");
-                    classTimings.add("02:30 AM - 03:30 PM");
-                    classTimings.add("03:30 AM - 04:30 PM");
-                    classTimings.add("04:30 AM - 05:30 PM");
-
+                    classTimings.add("01:30 PM - 02:30 PM");
+                    classTimings.add("02:30 PM - 03:30 PM");
+                    classTimings.add("03:30 PM - 04:30 PM");
+                    classTimings.add("04:30 PM - 05:30 PM");
 
                     timetable = new Timetable(days, classTimings);
 
                     Random random = new Random();
                     int subjectIndex = 0;
                     for (int day = 0; day < days; day++) {
+                        List<String> assignedSubjects = new ArrayList<>(); // To keep track of assigned subjects
+
                         for (int classIndex = 0; classIndex < classTimings.size(); classIndex++) {
                             Subject subject = subjects.get(subjectIndex);
+
                             if (subject.credits > 0) {
-                                timetable.addClass(day, classIndex, subject.name);
-                                subject.credits--;
+                                // Check if the slot is available and before 12:30
+                                if (classIndex < classTimings.size() - 1 && timetable.getClass(day, classIndex) == null) {
+                                    // Check if the subject is not already assigned on the same day
+                                    if (!assignedSubjects.contains(subject.name)) {
+                                        timetable.addClass(day, classIndex, subject.name);
+                                        subject.credits--;
+                                        assignedSubjects.add(subject.name);
+                                    }
+                                }
                             }
+
                             subjectIndex = (subjectIndex + 1) % numSubjects;
                         }
                     }
@@ -140,81 +150,68 @@ public class TimetableGeneratorWithSwitch {
                         timetable.display();
                     }
                     break;
+
                     case 4:
-    if (timetable == null) {
-        System.out.println("Please generate the timetable first.");
-    } else {
-        System.out.print("Enter the day to add an extra class (1-" + days + "): ");
-        int dayToAddClass = scanner.nextInt();
-        dayToAddClass--; // Convert to 0-based index
-
-        // Check if the day is valid
-        if (dayToAddClass < 0 || dayToAddClass >= days) {
-            System.out.println("Invalid day. Please try again.");
-            break;
-        }
-
-        // Check if regular class schedule until 12:30 is filled for that day
-        boolean isRegularScheduleFilled = true;
-        for (int i = 0; i < classTimings.size() - 1; i++) {
-            if (timetable.getClass(dayToAddClass, i) == null) {
-                isRegularScheduleFilled = false;
-                break;
-            }
-        }
-
-        if (!isRegularScheduleFilled) {
-            System.out.println("Please fill the regular class schedule until 12:30 before adding extra classes.");
-            break;
-        }
-
-        System.out.print("Enter the starting time for the extra class (e.g., 12:30 PM): ");
-        String startTime = scanner.next();
-
-        System.out.print("Enter the number of hours for the extra class: ");
-        int hoursToAdd = scanner.nextInt();
-
-        // Check if the class slots are available
-        boolean canAddClass = true;
-        int classIndexToAdd = -1;
-
-        for (int i = 0; i < classTimings.size(); i++) {
-            if (classTimings.get(i).startsWith(startTime)) {
-                classIndexToAdd = i;
-                break;
-            }
-        }
-
-        if (classIndexToAdd == -1) {
-            System.out.println("Invalid starting time. Please try again.");
-        } else if (classIndexToAdd + hoursToAdd > classTimings.size()) {
-            System.out.println("Not enough time slots available for the specified duration.");
-        } else {
-            for (int i = classIndexToAdd; i < classIndexToAdd + hoursToAdd; i++) {
-                if (timetable.getClass(dayToAddClass, i) != null) {
-                    canAddClass = false;
+                    if (timetable == null) {
+                        System.out.println("Please generate the timetable first.");
+                    } else {
+                        System.out.print("Enter the day to add an extra class (1-" + days + "): ");
+                        int dayToAddClass = scanner.nextInt();
+                        dayToAddClass--; // Convert to 0-based index
+                
+                        // Check if the day is valid
+                        if (dayToAddClass < 0 || dayToAddClass >= days) {
+                            System.out.println("Invalid day. Please try again.");
+                            break;
+                        }
+                
+                        System.out.print("Enter the number of hours for the extra class: ");
+                        int hoursToAdd = scanner.nextInt();
+                
+                        // Check if the class slots are available
+                        boolean canAddClass = true;
+                        int classIndexToAdd = -1;
+                
+                        for (int i = 0; i < classTimings.size(); i++) {
+                            System.out.println((i + 1) + ". " + classTimings.get(i));
+                        }
+                
+                        System.out.print("Select the starting time for the extra class (1-" + classTimings.size() + "): ");
+                        int selectedTime = scanner.nextInt();
+                
+                        if (selectedTime < 1 || selectedTime > classTimings.size()) {
+                            System.out.println("Invalid starting time selection. Please try again.");
+                        } else {
+                            classIndexToAdd = selectedTime - 1;
+                
+                            if (classIndexToAdd + hoursToAdd > classTimings.size()) {
+                                System.out.println("Not enough time slots available for the specified duration.");
+                            } else {
+                                for (int i = classIndexToAdd; i < classIndexToAdd + hoursToAdd; i++) {
+                                    if (timetable.getClass(dayToAddClass, i) != null) {
+                                        canAddClass = false;
+                                        break;
+                                    }
+                                }
+                
+                                if (canAddClass) {
+                                    System.out.print("Enter the subject name for the extra class: ");
+                                    String subjectNameToAdd = scanner.next();
+                
+                                    // Add the extra class to the timetable
+                                    for (int i = classIndexToAdd; i < classIndexToAdd + hoursToAdd; i++) {
+                                        timetable.addClass(dayToAddClass, i, subjectNameToAdd);
+                                    }
+                
+                                    System.out.println("Extra class added to the timetable.");
+                                    timetable.display();
+                                } else {
+                                    System.out.println("Cannot add the class at the provided time. The slots are not available.");
+                                }
+                            }
+                        }
+                    }
                     break;
-                }
-            }
-
-            if (canAddClass) {
-                System.out.print("Enter the subject name for the extra class: ");
-                String subjectNameToAdd = scanner.next();
-
-                // Add the extra class to the timetable
-                for (int i = classIndexToAdd; i < classIndexToAdd + hoursToAdd; i++) {
-                    timetable.addClass(dayToAddClass, i, subjectNameToAdd);
-                }
-
-                System.out.println("Extra class added to the timetable.");
-                timetable.display();
-            } else {
-                System.out.println("Cannot add the class at the provided time. The slots are not available.");
-            }
-        }
-    }
-    break;
-
                 
 
                 case 5:
