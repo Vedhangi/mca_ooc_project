@@ -95,6 +95,7 @@ public class TimetableGeneratorWithSwitch {
 
                     Random random = new Random();
                     int subjectIndex = 0;
+
                     for (int day = 0; day < days; day++) {
                         List<String> assignedSubjects = new ArrayList<>(); // To keep track of assigned subjects
 
@@ -103,7 +104,7 @@ public class TimetableGeneratorWithSwitch {
 
                             if (subject.credits > 0) {
                                 // Check if the slot is available and before 12:30
-                                if (classIndex < classTimings.size() - 1 && timetable.getClass(day, classIndex) == null) {
+                                if (classIndex < 3 && timetable.getClass(day, classIndex) == null) {
                                     // Check if the subject is not already assigned on the same day
                                     if (!assignedSubjects.contains(subject.name)) {
                                         timetable.addClass(day, classIndex, subject.name);
@@ -112,37 +113,71 @@ public class TimetableGeneratorWithSwitch {
                                     }
                                 }
                             }
-
+                            
                             subjectIndex = (subjectIndex + 1) % numSubjects;
                         }
                     }
+
                     System.out.println("Timetable generated.");
                     break;
 
+
                 case 2:
+                    // ... (code for modifying the timetable)
+                    
                     if (timetable == null) {
                         System.out.println("Please generate the timetable first.");
                     } else {
-                        System.out.print("Enter the day to modify (1-" + days + "): ");
-                        int dayToModify = scanner.nextInt();
-                        dayToModify--; // Convert to 0-based index
-                        System.out.print("Enter the class index to modify (1-" + classTimings.size() + "): ");
-                        int classIndexToModify = scanner.nextInt();
-                        classIndexToModify--; // Convert to 0-based index
-
-                        if (timetable.getClass(dayToModify, classIndexToModify) == null) {
-                            System.out.print("Enter the subject name to assign: ");
-                            String subjectNameToAssign = scanner.next();
-                            timetable.addClass(dayToModify, classIndexToModify, subjectNameToAssign);
-                            System.out.println("Timetable updated.");
-                            timetable.display();
+                        System.out.println("Current Timetable:");
+                        timetable.display();
+                        System.out.println("Options:");
+                        System.out.println("1. Modify existing class");
+                        System.out.println("2. Cancel a class (set to null)");
+                
+                        System.out.print("Select an option (1 or 2): ");
+                        int modifyOption = scanner.nextInt();
+                
+                        if (modifyOption == 1) {
+                            System.out.print("Enter the day to modify (1-" + days + "): ");
+                            int dayToModify = scanner.nextInt();
+                            dayToModify--; // Convert to 0-based index
+                            System.out.print("Enter the class index to modify (1-" + classTimings.size() + "): ");
+                            int classIndexToModify = scanner.nextInt();
+                            classIndexToModify--; // Convert to 0-based index
+                
+                            if (timetable.getClass(dayToModify, classIndexToModify) == null) {
+                                System.out.println("Cannot modify a null slot. Please try again.");
+                            } else {
+                                System.out.print("Enter the new subject name: ");
+                                String newSubjectName = scanner.next();
+                                timetable.addClass(dayToModify, classIndexToModify, newSubjectName);
+                                System.out.println("Class modified.");
+                                timetable.display();
+                            }
+                        } else if (modifyOption == 2) {
+                            System.out.print("Enter the day to cancel a class (1-" + days + "): ");
+                            int dayToCancel = scanner.nextInt();
+                            dayToCancel--; // Convert to 0-based index
+                            System.out.print("Enter the class index to cancel (1-" + classTimings.size() + "): ");
+                            int classIndexToCancel = scanner.nextInt();
+                            classIndexToCancel--; // Convert to 0-based index
+                
+                            if (timetable.getClass(dayToCancel, classIndexToCancel) == null) {
+                                System.out.println("The selected slot is already null.");
+                            } else {
+                                timetable.addClass(dayToCancel, classIndexToCancel, null);
+                                System.out.println("Class canceled.");
+                                timetable.display();
+                            }
                         } else {
-                            System.out.println("Cannot modify a non-null slot. Try again.");
+                            System.out.println("Invalid option. Please try again.");
                         }
                     }
                     break;
+                
 
                 case 3:
+                    // ... (code for displaying the timetable)
                     if (timetable == null) {
                         System.out.println("Please generate the timetable first.");
                     } else {
@@ -151,7 +186,8 @@ public class TimetableGeneratorWithSwitch {
                     }
                     break;
 
-                    case 4:
+                case 4:
+                    // ... (code for adding an extra class)
                     if (timetable == null) {
                         System.out.println("Please generate the timetable first.");
                     } else {
@@ -212,7 +248,6 @@ public class TimetableGeneratorWithSwitch {
                         }
                     }
                     break;
-                
 
                 case 5:
                     System.out.println("Exiting the program.");
