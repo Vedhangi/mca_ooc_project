@@ -1,4 +1,8 @@
 import javax.swing.*;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,72 +32,131 @@ public class TimetableGeneratorSwing extends JFrame {
         JMenu optionsMenu = new JMenu("Options");
         menuBar.add(optionsMenu);
 
-        JMenuItem generateMenuItem = new JMenuItem("Generate Timetable");
-        JMenuItem modifyMenuItem = new JMenuItem("Modify Timetable");
-        JMenuItem displayMenuItem = new JMenuItem("Display Timetable");
-        JMenuItem extraClassMenuItem = new JMenuItem("Add Extra Class");
-        JMenuItem commentclassMenuItem = new JMenuItem("Add comment ");
+        // JMenuItem generateMenuItem = new JMenuItem("Generate Timetable");
+        // JMenuItem modifyMenuItem = new JMenuItem("Modify Timetable");
+        // JMenuItem displayMenuItem = new JMenuItem("Display Timetable");
+        // JMenuItem extraClassMenuItem = new JMenuItem("Add Extra Class");
+        // JMenuItem commentclassMenuItem = new JMenuItem("Add Comment ");
+
 
         JMenuItem exitMenuItem = new JMenuItem("Exit");
-
-        optionsMenu.add(generateMenuItem);
-        optionsMenu.add(modifyMenuItem);
-        optionsMenu.add(displayMenuItem);
-        optionsMenu.add(extraClassMenuItem);
-        optionsMenu.add(commentclassMenuItem);
         optionsMenu.add(exitMenuItem);
+
+        // JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        // optionsMenu.add(generateMenuItem);
+        // optionsMenu.add(modifyMenuItem);
+        // optionsMenu.add(displayMenuItem);
+        // optionsMenu.add(extraClassMenuItem);
+        // optionsMenu.add(commentclassMenuItem);
 
         JTextArea textArea = new JTextArea();
         textArea.setEditable(false); // Make the text area read-only
         JScrollPane scrollPane = new JScrollPane(textArea);
         add(scrollPane, BorderLayout.CENTER);
 
-        generateMenuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                generateTimetable();
-                displayTimetable(textArea);
-            }
-        });
+        // generateMenuItem.addActionListener(new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
+        //         generateTimetable();
+        //         displayTimetable(textArea);
+        //     }
+        // });
 
-        modifyMenuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                modifyTimetable(textArea);
-            }
-        });
+        // modifyMenuItem.addActionListener(new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
+        //         modifyTimetable(textArea);
+        //     }
+        // });
 
-        displayMenuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                displayTimetable(textArea);
-            }
-        });
+        // displayMenuItem.addActionListener(new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
+        //         displayTimetable(textArea);
+        //     }
+        // });
 
-        extraClassMenuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addExtraClass(textArea);
-            }
-        });
-        commentclassMenuItem.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                comment(textArea);
-            }
-        });
+        // extraClassMenuItem.addActionListener(new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
+        //         addExtraClass(textArea);
+        //     }
+        // });
+        // commentclassMenuItem.addActionListener(new ActionListener()
+        // {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e)
+        //     {
+        //         comment(textArea);
+        //     }
+        // });
 
-        exitMenuItem.addActionListener(new ActionListener() {
+        // exitMenuItem.addActionListener(new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
+        //         System.exit(0);
+        //     }
+        // });
+        JButton generateButton = new JButton("Generate Timetable");
+        JButton modifyButton = new JButton("Modify Timetable");
+        JButton displayButton = new JButton("Display Timetable");
+        JButton extraClassButton = new JButton("Add Extra Class");
+        JButton commentButton = new JButton("Add Comment");
+        JButton exitButton = new JButton("Exit");
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.add(generateButton);
+        buttonPanel.add(modifyButton);
+        buttonPanel.add(displayButton);
+        buttonPanel.add(extraClassButton);
+        buttonPanel.add(commentButton);
+        buttonPanel.add(exitButton);
+        add(buttonPanel, BorderLayout.SOUTH);
+
+        
+    
+    generateButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            generateTimetable();
+            displayTimetable(textArea);
+        }
+    });
+
+    modifyButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            modifyTimetable(textArea);
+        }
+    });
+
+    displayButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            displayTimetable(textArea);
+        }
+    });
+
+    extraClassButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            addExtraClass(textArea);
+        }
+    });
+
+    commentButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            comment(textArea);
+        }
+    });
+     exitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }
         });
-        
-    }
-    
+}
     
 
     private void generateTimetable() {
@@ -282,14 +345,45 @@ public class TimetableGeneratorSwing extends JFrame {
         // You can use the 'timetable' object to get the timetable information.
         // Update the text area using 'textArea.setText()' and 'displayTimetable()'.
         
+        //     if (timetable == null) {
+        //         textArea.setText("Please generate the timetable first.");
+        //     } else {
+        //         textArea.setText("Timetable:\n");
+        //         String timetableStr = generateTimetableString(timetable, classTimings);
+        //         textArea.append(timetableStr);
+        //     }
+        // }
+       
+        
+        
             if (timetable == null) {
                 textArea.setText("Please generate the timetable first.");
             } else {
                 textArea.setText("Timetable:\n");
                 String timetableStr = generateTimetableString(timetable, classTimings);
                 textArea.append(timetableStr);
+        
+                // Create a panel for the timetable
+                JPanel timetablePanel = new JPanel(new BorderLayout());
+        
+                // Create a border around the panel
+                timetablePanel.setBorder(BorderFactory.createTitledBorder("Timetable"));
+        
+                // Create a scroll pane for the text area
+                JScrollPane scrollPane = new JScrollPane(textArea);
+                timetablePanel.add(scrollPane, BorderLayout.CENTER);
+        
+                // Create a new frame to display the timetable
+                JFrame timetableFrame = new JFrame("Timetable");
+                timetableFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                timetableFrame.setSize(600, 400); // Adjust the size as needed
+                timetableFrame.setLocationRelativeTo(this); // Center the frame relative to the main frame
+                timetableFrame.add(timetablePanel);
+                timetableFrame.setVisible(true);
             }
         }
+        
+        
         
         // This method generates the timetable string based on your existing logic.
         private String generateTimetableString(Timetable timetable, List<String> classTimings) {
@@ -405,7 +499,11 @@ public class TimetableGeneratorSwing extends JFrame {
                         } else {
                             String className = timetable.getClass(dayToAddComment, indexToAddComment);
                             String comment = JOptionPane.showInputDialog(this, "Enter a comment for Day " + (dayToAddComment + 1) + " at " + classTimings.get(indexToAddComment) + ":");
-    
+
+                           
+
+                        JOptionPane.showMessageDialog(this, "Comment added to the timetable.");
+                    
                             if (className != null) {
                                 timetable.addClass(dayToAddComment, indexToAddComment, className + " (" + comment + ")");
                             } else {
