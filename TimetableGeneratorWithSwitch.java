@@ -32,77 +32,27 @@ public class TimetableGeneratorSwing extends JFrame {
         JMenu optionsMenu = new JMenu("Options");
         menuBar.add(optionsMenu);
 
-        // JMenuItem generateMenuItem = new JMenuItem("Generate Timetable");
-        // JMenuItem modifyMenuItem = new JMenuItem("Modify Timetable");
-        // JMenuItem displayMenuItem = new JMenuItem("Display Timetable");
-        // JMenuItem extraClassMenuItem = new JMenuItem("Add Extra Class");
-        // JMenuItem commentclassMenuItem = new JMenuItem("Add Comment ");
+       
 
 
         JMenuItem exitMenuItem = new JMenuItem("Exit");
         optionsMenu.add(exitMenuItem);
 
-        // JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        // optionsMenu.add(generateMenuItem);
-        // optionsMenu.add(modifyMenuItem);
-        // optionsMenu.add(displayMenuItem);
-        // optionsMenu.add(extraClassMenuItem);
-        // optionsMenu.add(commentclassMenuItem);
+        
 
         JTextArea textArea = new JTextArea();
         textArea.setEditable(false); // Make the text area read-only
         JScrollPane scrollPane = new JScrollPane(textArea);
         add(scrollPane, BorderLayout.CENTER);
 
-        // generateMenuItem.addActionListener(new ActionListener() {
-        //     @Override
-        //     public void actionPerformed(ActionEvent e) {
-        //         generateTimetable();
-        //         displayTimetable(textArea);
-        //     }
-        // });
-
-        // modifyMenuItem.addActionListener(new ActionListener() {
-        //     @Override
-        //     public void actionPerformed(ActionEvent e) {
-        //         modifyTimetable(textArea);
-        //     }
-        // });
-
-        // displayMenuItem.addActionListener(new ActionListener() {
-        //     @Override
-        //     public void actionPerformed(ActionEvent e) {
-        //         displayTimetable(textArea);
-        //     }
-        // });
-
-        // extraClassMenuItem.addActionListener(new ActionListener() {
-        //     @Override
-        //     public void actionPerformed(ActionEvent e) {
-        //         addExtraClass(textArea);
-        //     }
-        // });
-        // commentclassMenuItem.addActionListener(new ActionListener()
-        // {
-        //     @Override
-        //     public void actionPerformed(ActionEvent e)
-        //     {
-        //         comment(textArea);
-        //     }
-        // });
-
-        // exitMenuItem.addActionListener(new ActionListener() {
-        //     @Override
-        //     public void actionPerformed(ActionEvent e) {
-        //         System.exit(0);
-        //     }
-        // });
+        
         JButton generateButton = new JButton("Generate Timetable");
         JButton modifyButton = new JButton("Modify Timetable");
         JButton displayButton = new JButton("Display Timetable");
         JButton extraClassButton = new JButton("Add Extra Class");
         JButton commentButton = new JButton("Add Comment");
         JButton exitButton = new JButton("Exit");
+        JButton reschedduleButton = new JButton("reschadule");
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonPanel.add(generateButton);
@@ -111,6 +61,7 @@ public class TimetableGeneratorSwing extends JFrame {
         buttonPanel.add(extraClassButton);
         buttonPanel.add(commentButton);
         buttonPanel.add(exitButton);
+        buttonPanel.add(reschedduleButton);
         add(buttonPanel, BorderLayout.SOUTH);
 
         
@@ -154,6 +105,12 @@ public class TimetableGeneratorSwing extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
+            }
+        });
+        reschedduleButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                rescheduleClassesWithUnavailableDays(textArea);
             }
         });
 }
@@ -341,69 +298,60 @@ public class TimetableGeneratorSwing extends JFrame {
     }
 
     private void displayTimetable(JTextArea textArea) {
-        // Implement your code for displaying the timetable here
-        // You can use the 'timetable' object to get the timetable information.
-        // Update the text area using 'textArea.setText()' and 'displayTimetable()'.
-        
-        //     if (timetable == null) {
-        //         textArea.setText("Please generate the timetable first.");
-        //     } else {
-        //         textArea.setText("Timetable:\n");
-        //         String timetableStr = generateTimetableString(timetable, classTimings);
-        //         textArea.append(timetableStr);
-        //     }
-        // }
-       
-        
-        
-            if (timetable == null) {
-                textArea.setText("Please generate the timetable first.");
-            } else {
-                textArea.setText("Timetable:\n");
-                String timetableStr = generateTimetableString(timetable, classTimings);
-                textArea.append(timetableStr);
-        
-                // Create a panel for the timetable
-                JPanel timetablePanel = new JPanel(new BorderLayout());
-        
-                // Create a border around the panel
-                timetablePanel.setBorder(BorderFactory.createTitledBorder("Timetable"));
-        
-                // Create a scroll pane for the text area
-                JScrollPane scrollPane = new JScrollPane(textArea);
-                timetablePanel.add(scrollPane, BorderLayout.CENTER);
-        
-                // Create a new frame to display the timetable
-                JFrame timetableFrame = new JFrame("Timetable");
-                timetableFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                timetableFrame.setSize(600, 400); // Adjust the size as needed
-                timetableFrame.setLocationRelativeTo(this); // Center the frame relative to the main frame
-                timetableFrame.add(timetablePanel);
-                timetableFrame.setVisible(true);
+        if (timetable == null) {
+            textArea.setText("Please generate the timetable first.");
+        } else {
+            // Create a panel for the timetable
+            JPanel timetablePanel = new JPanel(new GridLayout(days + 1, classTimings.size() + 1));
+    
+            // Add a border to the timetable panel
+            timetablePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    
+            // Create labels for days and class timings
+            timetablePanel.add(new JLabel("Time/Day"));
+            for (String timing : classTimings) {
+                JLabel timingLabel = new JLabel(timing);
+                timingLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                timetablePanel.add(timingLabel);
             }
-        }
-        
-        
-        
-        // This method generates the timetable string based on your existing logic.
-        private String generateTimetableString(Timetable timetable, List<String> classTimings) {
-            StringBuilder timetableStr = new StringBuilder();
-            for (int day = 0; day < timetable.schedule.length; day++) {
-                timetableStr.append("Day ").append(day + 1).append(": ");
-                for (int classIndex = 0; classIndex < timetable.schedule[day].length; classIndex++) {
+    
+            // Populate the timetable panel with data
+            for (int day = 0; day < days; day++) {
+                JLabel dayLabel = new JLabel("Day " + (day + 1));
+                dayLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                timetablePanel.add(dayLabel);
+    
+                for (int classIndex = 0; classIndex < classTimings.size(); classIndex++) {
                     String className = timetable.getClass(day, classIndex);
+                    JLabel classLabel = new JLabel(className != null ? className : "FREE");
+                    classLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+    
+                    // Set a blue background for non-free classes
                     if (className != null) {
-                        timetableStr.append(classTimings.get(classIndex)).append(" - ").append(className).append(" | ");
-                    } else {
-                        timetableStr.append("FREE | ");
+                        classLabel.setOpaque(true);
+                        classLabel.setBackground(new Color(173, 216, 230)); // Light blue color
+
                     }
+    
+                    timetablePanel.add(classLabel);
                 }
-                timetableStr.append("\n");
             }
-            return timetableStr.toString();
-        
-        
+    
+            // Create a scroll pane for the timetable panel
+            JScrollPane scrollPane = new JScrollPane(timetablePanel);
+    
+            // Create a new frame to display the timetable
+            JFrame timetableFrame = new JFrame("Timetable");
+            timetableFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            timetableFrame.setSize(800, 600); // Adjust the size as needed
+            timetableFrame.setLocationRelativeTo(this); // Center the frame relative to the main frame
+            timetableFrame.add(scrollPane);
+            timetableFrame.setVisible(true);
+        }
     }
+    
+    
+    
 
     private void addExtraClass(JTextArea textArea) {
         // Implement your code for adding an extra class here
@@ -472,10 +420,7 @@ public class TimetableGeneratorSwing extends JFrame {
     
 
     }
-    public void comment(JTextArea textArea)
-    {
-        
-        
+    public void comment(JTextArea textArea) {
         if (timetable == null) {
             JOptionPane.showMessageDialog(this, "Please generate the timetable first.");
         } else {
@@ -499,16 +444,19 @@ public class TimetableGeneratorSwing extends JFrame {
                         } else {
                             String className = timetable.getClass(dayToAddComment, indexToAddComment);
                             String comment = JOptionPane.showInputDialog(this, "Enter a comment for Day " + (dayToAddComment + 1) + " at " + classTimings.get(indexToAddComment) + ":");
-
-                           
-
-                        JOptionPane.showMessageDialog(this, "Comment added to the timetable.");
-                    
+    
+                            JLabel classLabel = new JLabel(className != null ? className : "");
+                            
+                            // Set red color for comments
+                            classLabel.setForeground(Color.RED);
+    
                             if (className != null) {
-                                timetable.addClass(dayToAddComment, indexToAddComment, className + " (" + comment + ")");
+                                classLabel.setText(className + " (" + comment + ")");
                             } else {
-                                timetable.addClass(dayToAddComment, indexToAddComment, comment);
+                                classLabel.setText(comment);
                             }
+    
+                            timetable.addClass(dayToAddComment, indexToAddComment, classLabel.getText());
     
                             JOptionPane.showMessageDialog(this, "Comment added to the timetable.");
                             displayTimetable(textArea);
@@ -521,9 +469,73 @@ public class TimetableGeneratorSwing extends JFrame {
                 JOptionPane.showMessageDialog(this, "Invalid input. Please enter a valid day number.");
             }
         }
-    
-
     }
+    
+    private void rescheduleClassesWithUnavailableDays(JTextArea textArea) {
+        if (timetable == null) {
+            JOptionPane.showMessageDialog(this, "Please generate the timetable first.");
+        } else {
+            // Prompt user for preferred days
+            String preferenceInput = JOptionPane.showInputDialog(this, "Enter days you prefer to take lectures (comma-separated, e.g., 2,4,6):");
+    
+            List<Integer> preferredDays = new ArrayList<>();
+            try {
+                if (preferenceInput != null && !preferenceInput.trim().isEmpty()) {
+                    String[] preferredDaysStr = preferenceInput.split(",");
+                    for (String dayStr : preferredDaysStr) {
+                        int day = Integer.parseInt(dayStr.trim()) - 1; // Convert to 0-based index
+                        if (day >= 0 && day < days) {
+                            preferredDays.add(day);
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Invalid day input for preferences. Ignoring preferences.");
+                            return;
+                        }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "No preferences provided. Aborting operation.");
+                    return;
+                }
+    
+                // Prompt user for preferred subjects
+                String subjectsInput = JOptionPane.showInputDialog(this, "Enter subjects you prefer (comma-separated, e.g., Math,Science):");
+    
+                List<String> preferredSubjects = new ArrayList<>();
+                if (subjectsInput != null && !subjectsInput.trim().isEmpty()) {
+                    String[] subjectsArray = subjectsInput.split(",");
+                    for (String subject : subjectsArray) {
+                        preferredSubjects.add(subject.trim());
+                    }
+                }
+    
+                // Reschedule classes considering preferences
+                for (int classIndex = 0; classIndex < classTimings.size(); classIndex++) {
+                    for (int preferredDay : preferredDays) {
+                        if (timetable.getClass(preferredDay, classIndex) == null) {
+                            // Find the first available slot on the preferred day
+                            for (int day = 0; day < days; day++) {
+                                if (timetable.getClass(day, classIndex) != null) {
+                                    String className = timetable.getClass(day, classIndex);
+                                    if (preferredSubjects.isEmpty() || preferredSubjects.contains(className)) {
+                                        timetable.addClass(day, classIndex, null);
+                                        timetable.addClass(preferredDay, classIndex, className);
+                                        break;
+                                    }
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+    
+                JOptionPane.showMessageDialog(this, "Classes rescheduled considering preferences and subjects.");
+                displayTimetable(textArea);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Invalid input format. Please enter valid day numbers.");
+            }
+        }
+    }
+    
+    
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
