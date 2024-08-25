@@ -1,2 +1,3 @@
 # mca_ooc_project
-timetable managnment 
+tittle : Timetable genrating system using object oreinted concepts 
+
